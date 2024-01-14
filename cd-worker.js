@@ -16,6 +16,74 @@ async function handleRequest(request) {
       // Replace '{}' with your JSON body
       jsonData = {
      };
+    } else if (provider === "4") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "5") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "6") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "7") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "8") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "9") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "10") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "11") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "12") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "13") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "14") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "15") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "16") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "17") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "18") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "19") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
+    } else if (provider === "20") {
+        // Replace '{}' with your JSON body
+        jsonData = {
+       };
     }
   
     if (!jsonData) {
