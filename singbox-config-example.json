@@ -38,7 +38,8 @@
             "esme tag config4"
          ],
          "url":"https://www.gstatic.com/generate_204",
-         "interval":"30m"
+         "tolerance": 500
+         "interval":"3m"
       },
       {
          "tag":"direct",
