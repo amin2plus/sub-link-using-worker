@@ -65,7 +65,7 @@
             "type":"remote",
             "format":"binary",
             "download_detour":"Select",
-            "update_interval":"1d",
+            "update_interval":"7d",
             "url":"https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geoip-ir.srs"
          },
          {
@@ -73,7 +73,7 @@
             "type":"remote",
             "format":"binary",
             "download_detour":"Select",
-            "update_interval":"1d",
+            "update_interval":"7d",
             "url":"https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geosite-ir.srs"
          }
       ],
