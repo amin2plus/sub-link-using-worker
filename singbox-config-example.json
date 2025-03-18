@@ -1,286 +1,295 @@
 {
-   "outbounds":[
-      {
-         "tag":"esme tag config1",
-         ///body config1
-      },
-      {
-         "tag":"esme tag config2",
-         ///body config2
-      },
-      {
-         "tag":"esme tag config3",
-         ///body config3
-      },
-      {
-         "tag":"esme tag config4"
-	 ///body config4
-      },
-      {
-         "type":"selector",
-         "tag":"Proxy",
-         "outbounds":[
-            "Auto",
-            "esme tag config1",
-            "esme tag config2",
-            "esme tag config3",
-            "esme tag config4"
-         ],
-         "default":"Auto"
-      },
-      {
-         "type":"urltest",
-         "tag":"Auto",
-         "outbounds":[
-            "esme tag config1",
-            "esme tag config2",
-            "esme tag config3",
-            "esme tag config4"
-         ],
-         "url":"http://cp.cloudflare.com/generate_204",
-         "interval":"1m",
-         "tolerance":200,
-         "interrupt_exist_connections":true
-      },
-    {
-      "tag": "direct",
-      "type": "direct"
-    }
-  ],
-  "route": {
-    "rule_set": [
-      {
-        "tag": "geoip-ir",
-        "type": "remote",
-        "format": "binary",
-        "download_detour": "direct",
-        "update_interval": "7d",
-        "url": "https://raw.githubusercontent.com/Chocolate4U/Iran-sing-box-rules/rule-set/geoip-ir.srs"
-      },
-      {
-        "tag": "geosite-all",
-        "type": "remote",
-        "format": "binary",
-        "download_detour": "direct",
-        "update_interval": "7d",
-        "url": "https://github.com/bootmortis/sing-geosite/releases/latest/download/geosite-all.srs"
-      }
+    "outbounds":[
+        {
+            "tag":"esme tag config1",
+          	///body config1
+        },
+        {
+            "tag":"esme tag config2",
+           	 ///body config2
+        },
+        {
+            "tag":"esme tag config3",
+            	///body config3
+        },
+        {
+            "tag":"esme tag config4"
+		///body config4
+        },
+        {
+            "type":"selector",
+            "tag":"Proxy",
+            "outbounds":[
+                "Auto",
+                "esme tag config1",
+                "esme tag config2",
+                "esme tag config3",
+                "esme tag config4"
+            ],
+            "default":"Auto"
+        },
+        {
+            "type":"urltest",
+            "tag":"Auto",
+            "outbounds":[
+                "esme tag config1",
+                "esme tag config2",
+                "esme tag config3",
+                "esme tag config4"
+            ],
+            "url":"http://cp.cloudflare.com/generate_204",
+            "interval":"1m",
+            "tolerance":200,
+            "interrupt_exist_connections":true
+        },
+        {
+            "tag":"direct",
+            "type":"direct"
+        }
     ],
-    "rules": [
-      {
-        "inbound": [
-          "tun-in",
-          "mixed-in"
+    "route":{
+        "rule_set":[
+            {
+                "tag":"geoip-ir",
+                "type":"remote",
+                "format":"binary",
+                "download_detour":"direct",
+                "update_interval":"7d",
+                "url":"https://cdn.jsdelivr.net/gh/Chocolate4U/Iran-sing-box-rules@rule-set/geoip-ir.srs"
+            },
+            {
+                "tag":"geosite-all",
+                "type":"remote",
+                "format":"binary",
+                "download_detour":"direct",
+                "update_interval":"7d",
+                "url":"https://github.com/bootmortis/sing-geosite/releases/latest/download/geosite-all.srs"
+            }
         ],
-        "action": "sniff",
-        "timeout": "1s"
-      },
-      {
-        "inbound": [
-          "tun-in",
-          "mixed-in"
+        "rules":[
+            {
+                "action":"sniff"
+            },
+            {
+                "action":"route",
+                "clash_mode":"Direct",
+                "outbound":"direct"
+            },
+            {
+                "action":"route",
+                "clash_mode":"Global",
+                "outbound":"Proxy"
+            },
+            {
+                "action":"hijack-dns",
+                "protocol":"dns"
+            },
+            {
+                "action":"reject",
+                "ip_cidr":[
+                    "224.0.0.0/3",
+                    "ff00::/8"
+                ]
+            },
+            {
+                "action":"reject",
+                "protocol":"bittorrent"
+            },
+            {
+                "action":"reject",
+                "domain_suffix":[
+                    "cdn.yektanet.com",
+                    "native-scripts.yektanet.com"
+                ]
+            },
+            {
+                "action":"route",
+                "ip_cidr":[
+                    "127.0.0.0/8",
+                    "192.0.0.0/24",
+                    "192.168.0.0/16"
+                ],
+                "outbound":"direct"
+            },
+            {
+                "action":"route",
+                "domain_suffix":[
+                    ".ir",
+                    "whatsapp.com",
+                    "whatsapp.net"
+                ],
+                "outbound":"direct"
+            },
+            {
+                "action":"route",   //some iranian apps use this to detect vpn
+                "domain":[
+                    "www.cloudflare.com"
+                ],
+                "outbound":"direct"
+            },
+            {
+                "action":"route",
+                "rule_set":[
+                    "geoip-ir",
+                    "geosite-all"
+                ],
+                "outbound":"direct"
+            },
+            {
+                "action":"route",
+                "process_name":[
+                    "nearby_share.exe",
+                    "WhatsApp.exe"
+                ],
+                "outbound":"direct"
+            },
+            {
+                "action":"route",
+                "package_name":[
+                    "com.google.android.gms.nearby",
+                    "com.samsung.android.app.sharelive",
+                    "com.whatsapp",
+                    "com.whatsapp.w4b"
+                ],
+                "outbound":"direct"
+            }
         ],
-        "action": "resolve"
-      },
-      {
-        "protocol": "dns",
-        "port":[
-          53,
-          853
-        ],
-        "action": "hijack-dns"
-      },
-      {
-        "action": "direct",
-        "override_address": "9.9.9.9",
-        "override_port": 443
-      },
-      {
-        "ip_cidr": [
-          "224.0.0.0/3",
-          "10.10.34.34/29", //if u have DNS pollution, its better to remove this (or choose a good DOH as remote-DNS)
-          "ff00::/8"
-        ],
-        "action": "reject"
-      },
-      {
-        "protocol": "bittorrent",
-        "action": "reject"
-      },
-      {
-        "domain_suffix": [
-          "cdn.yektanet.com",
-          "native-scripts.yektanet.com"
-        ],
-        "action": "reject"
-      },
-      {
-        "ip_is_private": true,
-        "outbound": "direct"
-      },
-      {
-        "domain_suffix": [
-          ".ir",
-          "whatsapp.com",
-          "whatsapp.net"
-        ],
-        "outbound": "direct"
-      },
-      {
-        "domain": [
-          "www.cloudflare.com" //some iranian apps check this domain for VPN detection
-        ],
-        "outbound": "direct"
-      },
-      {
-        "rule_set": [
-          "geoip-ir",
-          "geosite-all"
-        ],
-        "outbound": "direct"
-      },
-      {
-        "process_name": [
-          "nearby_share.exe",
-          "WhatsApp.exe"
-        ],
-        "outbound": "direct"
-      },
-      {
-        "package_name": [
-          "com.google.android.gms.nearby",
-          "com.samsung.android.app.sharelive",
-          "com.whatsapp",
-          "com.whatsapp.w4b"
-        ],
-        "outbound": "direct"
-      }
-    ],
-    "final": "Proxy",
-    "auto_detect_interface": true,
-    "override_android_vpn": true
-  },
-  "experimental": {
-    "cache_file": {
-      "enabled": true,
-      "store_rdrc": true
+        "final":"Proxy",
+        "auto_detect_interface":true
     },
-    "clash_api": { //you can access the web panel via links below(for PC users), if u dont use it just remove this part
-      "external_controller": "127.0.0.1:9090",
-      "access_control_allow_origin": [ 
-        "https://metacubex.github.io/metacubexd",
-        "https://metacubexd.pages.dev",
-        "https://board.zash.run.place"
-      ],
-      "access_control_allow_private_network": true
-    }
-  },
-  "dns": {
-    "servers": [
-      {
-        "tag": "dns-remote",
-        "address": "https://dns.google/dns-query", //change to a good DoH or anything that works for you
-        "address_resolver": "dns-decoy"
-      },
-      {
-        "tag": "dns-decoy",
-        "address": "8.8.8.8"
-      },
-      {
-        "tag": "dns-direct",
-        "address": "8.8.4.4",
-        "detour": "direct"
-      },
-      {
-        "tag": "dns-local",
-        "address": "8.8.4.4",
-        "detour": "direct"
-      },
-      {
-        "tag": "dns-block",
-        "address": "rcode://success"
-      },
-      {
-        "tag": "fake-ip",
-        "address": "fakeip"
-      }
-    ],
-    "rules": [
-      {
-        "outbound": "direct",
-        "server": "dns-direct"
-      },
-      {
-        "outbound": "any",
-        "server": "fake-ip",
-        "disable_cache": true
-      },
-      {
-        "domain_suffix": [
-          "cdn.yektanet.com",
-          "native-scripts.yektanet.com"
+    "dns":{
+        "servers":[
+            {
+                "tag":"dns-remote",
+                "address":"https://8.8.8.8/dns-query", //better to find a working DoH to avoide dns hijaking
+                "detour":"Proxy", //use proxy server to resolve dns other wise delete this line and it will use dns-decoy to resolving the DoH itself
+                "address_resolver":"dns-decoy"
+            },
+            {
+                "tag":"dns-decoy",
+                "address":"8.8.8.8"
+            },
+            {
+                "tag":"dns-direct",
+                "address":"8.8.4.4",
+                "detour":"direct"
+            },
+            {
+                "tag":"dns-local",
+                "address":"8.8.4.4",
+                "detour":"direct"
+            },
+            {
+                "tag":"dns-block",
+                "address":"rcode://success"
+            },
+            {
+                "tag":"fake-ip",
+                "address":"fakeip"
+            }
         ],
-        "action": "reject"
-      },
-      {
-        "domain": [
-          "www.cloudflare.com" //some iranian apps check this domain for VPN detection
+        "rules":[
+            {
+                "action":"route",
+                "clash_mode":"Global",
+                "server":"dns-remote",
+                "source_ip_cidr":[
+                    "172.19.0.0/30"
+                ]
+            },
+            {
+                "action":"route",
+                "server":"dns-remote",
+                "source_ip_cidr":[
+                    "172.19.0.0/30"
+                ]
+            },
+            {
+                "action":"route",
+                "clash_mode":"Direct",
+                "server":"dns-direct"
+            },
+            {
+                "action":"route",
+                "outbound":"direct",
+                "server":"dns-direct"
+            },
+            {
+                "action":"route",
+                "outbound":"any",
+                "server":"fake-ip",
+                "disable_cache":true
+            },
+            {
+                "action":"reject",
+                "domain_suffix":[
+                    "cdn.yektanet.com",
+                    "native-scripts.yektanet.com"
+                ]
+            },
+            {
+                "action":"reject",
+                "protocol":"bittorrent"
+            },
+            {
+                "action":"route",  //some iranian apps use this to detect vpn
+                "domain":[
+                    "www.cloudflare.com"
+                ],
+                "server":"dns-direct"
+            },
+            {
+                "action":"route",
+                "rule_set":"geosite-all",
+                "server":"dns-direct"
+            },
+            {
+                "action":"route",
+                "domain_suffix":[
+                    ".ir",
+                    "whatsapp.com",
+                    "whatsapp.net"
+                ],
+                "server":"dns-direct"
+            }
         ],
-        "server": "dns-direct"
-      },
-      {
-        "protocol": "bittorrent",
-        "action": "reject"
-      },
-      {
-        "rule_set": "geosite-all",
-        "server": "dns-direct"
-      },
-      {
-        "domain_suffix": [
-          ".ir",
-          "whatsapp.com",
-          "whatsapp.net"
-        ],
-        "server": "dns-direct"
-      }
-    ],
-    "final": "dns-remote",
-    "independent_cache": false,
-    "disable_expire": false,
-    "reverse_mapping": true,
-    "fakeip": {
-      "enabled": true,
-      "inet4_range": "198.18.0.0/15"
-    }
-  },
-  "inbounds": [
-    {
-      "type": "tun",
-      "tag": "tun-in",
-      "interface_name": "singbox-tun",
-      "stack": "mixed",
-      "address": "172.18.0.1/30",
-      "auto_route": true,
-      "strict_route": true,
-      "endpoint_independent_nat": true
+        "final":"dns-remote",
+        "strategy":"prefer_ipv4",
+        "fakeip":{
+            "enabled":true,
+            "inet4_range":"198.18.0.0/15"
+        }
     },
-    {
-      "type": "mixed",
-      "tag": "mixed-in",
-      "listen": "0.0.0.0",
-      "listen_port": 2335
+    "inbounds":[
+        {
+            "type":"tun",
+            "tag":"tun-in",
+            "stack":"system", //[system] will use less battery, use [gvisor] for better internal security
+            "interface_name":"singbox",
+            "address":"172.19.0.1/30",
+            "auto_route":true,
+            "endpoint_independent_nat":true
+        },
+        {
+            "listen":"127.0.0.1",
+            "listen_port":2080,
+            "type":"mixed",
+            "tag":"mixed-in",
+            "users":[]
+        }
+    ],
+    "experimental":{
+	    "clash_api":{
+            "external_controller":"127.0.0.1:9090", //use the links below to access web panel on pc , otherwise remove this part
+            "access_control_allow_origin":[
+                "https://metacubex.github.io/metacubexd",
+                "https://metacubexd.pages.dev",
+                "https://board.zash.run.place"
+            ],
+            "access_control_allow_private_network":true
+        }
     },
-    {
-      "type": "direct",
-      "tag": "dns-in",
-      "listen": "0.0.0.0",
-      "listen_port": 6450,
-      "override_port": 53
+    "log":{
+        "level":"warn",
+        "timestamp":true
     }
-  ],
-  "log": {
-    "level": "warn",
-    "timestamp": true
-  }
-}
